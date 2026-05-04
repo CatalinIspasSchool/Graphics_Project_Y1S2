@@ -53,11 +53,12 @@ protected:
 	void useShinyMaterial();
 	void useMatteMaterial();
 	void useAmbientOnlyMaterial();
+	void useGreenMaterial();
 
 	// For access to user input.
 	Input* input;
 	int mousePreviousPos[2];
-	bool lightState = false;
+	bool lightState = true;
 	bool lightJustChanged = false;
 
 	// My camera
@@ -74,12 +75,15 @@ protected:
 	char mouseText[40];
 
 	Model duck;
+	Model swordCutter;
+	Model swordEpic;
 	ProceduralShapes proceduralShapes;
 
 	//textures
 	GLuint skyboxTexture;
 	GLuint grassTexture;
 	GLuint waterTexture;
+	GLuint swordsTexture;
 };
 
 #endif

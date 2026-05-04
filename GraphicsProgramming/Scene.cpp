@@ -70,21 +70,47 @@ void Scene::render() {
 	// Render geometry/scene here -------------------------------------
 
 	//Skybox
-	useAmbientOnlyMaterial();
-	drawSkybox();
-
+	glPushMatrix();
+		useAmbientOnlyMaterial();
+		drawSkybox();
+	glPopMatrix();
 	//ducks
 	glPushMatrix();
+		glTranslatef(19, 7.8, 16);
+		glRotatef(-90, 0, 1, 0);
 		useShinyMaterial();
-		glTranslatef(2,3,10);
 		duck.Render();
+		glPushMatrix();
+			glTranslatef(6.5, 1.65, 1.8);
+			glScalef(0.03, 0.03, 0.03);
+			glRotatef(90, 0, 1, 0);
+			glRotatef(-90, 0, 0, 1);
+			swordCutter.Render();
+		glPopMatrix();
 	glPopMatrix();
+	glPushMatrix();
+		glTranslatef(14, 7, 29);
+		glRotatef(90, 0, 1, 0);
+		glRotatef(-20, 1, 0, 0);
+		useGreenMaterial();
+		duck.Render();
+		glPushMatrix();
+			glTranslatef(6.5, 1.65, 1.8);
+			glScalef(0.03, 0.03, 0.03);
+			glRotatef(90, 0, 1, 0);
+			glRotatef(-90, 0, 0, 1);
+			swordEpic.Render();
+		glPopMatrix();
+	glPopMatrix();
+
 	
 	//island
 	glPushMatrix();
+		useShinyMaterial();
 		glBindTexture(GL_TEXTURE_2D, waterTexture);
 		proceduralShapes.GenerateWaves(175, 300, 2, 3, 0.004, time);
 		glTranslatef(0,-10,0);
+		useAmbientOnlyMaterial();
 		glBindTexture(GL_TEXTURE_2D, grassTexture);
 		proceduralShapes.GenerateHill(50,40,18);
 	glPopMatrix();
@@ -131,12 +157,14 @@ void Scene::initialiseOpenGL()
 		SOIL_CREATE_NEW_ID,
 		SOIL_FLAG_MIPMAPS | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT);
 	waterTexture = SOIL_load_OGL_texture(
-		"gfx/crate.png",
+		"gfx/water.jpg",
 		SOIL_LOAD_AUTO,
 		SOIL_CREATE_NEW_ID,
 		SOIL_FLAG_MIPMAPS | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT);
 
 	duck.Load("models/RubberDuck_Cyan.obj", "models/Texture_RubberDucks.png");
+	swordCutter.Load("models/cutter01.obj", "gfx/sword_textures.png");
+	swordEpic.Load("models/dagger_epic.obj", "gfx/sword_textures.png");
 
 	glEnable(GL_LIGHTING);
 }
@@ -381,7 +409,7 @@ void Scene::useShinyMaterial()
 void Scene::useAmbientOnlyMaterial()
 {
 	GLfloat no_mat[] = { 0.0, 0.0, 0.0, 0.0 };
-	GLfloat mat_ambient_colour[] = { 1.5, 1.5, 15, 1.0 };
+	GLfloat mat_ambient_colour[] = { 1.5, 1.5, 1.5, 1.0 };
 	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
 	GLfloat low_shininess = 16.f;
 	GLfloat high_shininess = 128.f;
@@ -396,7 +424,22 @@ void Scene::useAmbientOnlyMaterial()
 
 }
 
+void Scene::useGreenMaterial()
+{
 
+	GLfloat no_mat[] = { 0.0, 0.0, 0.0, 0.0 };
+	GLfloat mat_ambient_colour[] = { 0.3, 1.5, 0.3, 1.0 };
+	GLfloat mat_specular[] = { 0.4, 1.0, 0.4, 1.0 };
+	GLfloat low_shininess = 16.f;
+	GLfloat high_shininess = 128.f;
+	GLfloat mat_emission[] = { 0.3, 0.2, 0.2, 0.0 };
+
+	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_ambient_colour);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+	glMateriali(GL_FRONT, GL_SHININESS, high_shininess);
+	glMaterialfv(GL_FRONT, GL_EMISSION, no_mat);
+
+}
 
 
 
